@@ -9,6 +9,7 @@ use stdClass;
 
 use function array_filter;
 use function is_integer;
+use function is_scalar;
 use function is_string;
 
 class Schema implements JsonSerializable
@@ -60,6 +61,21 @@ class Schema implements JsonSerializable
 
         foreach ($this->enum as $value) {
             if (!is_integer($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isEnumOfScalarValues(): bool
+    {
+        if (!$this->isEnum()) {
+            return false;
+        }
+
+        foreach ($this->enum as $value) {
+            if (!is_scalar($value)) {
                 return false;
             }
         }
