@@ -6,11 +6,15 @@ namespace Xenos\OpenApi\Model;
 
 use JsonSerializable;
 use stdClass;
-use Xenos\OpenApi\Model\Reference;
-use Xenos\OpenApi\Model\Schema;
 
+use function array_diff;
 use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_reduce;
 use function array_shift;
+use function array_unique;
+use function array_values;
 use function explode;
 
 class OpenAPI implements JsonSerializable
@@ -82,5 +86,27 @@ class OpenAPI implements JsonSerializable
         return empty($path)
             ? $object->$property ?? $object[$property] // @phpstan-ignore-line
             : self::get($object->$property ?? $object[$property], $path); // @phpstan-ignore-line
+    }
+
+    /** @return string[] */
+    public function findUsedTags(): array
+    {
+        return array_values(array_unique(array_reduce(
+            (array)$this->paths,
+            fn (array $carry, PathItem $pathItem) => array_merge($carry, $pathItem->findAllTags()),
+            []
+        )));
+    }
+
+    /** @return string[] */
+    public function findUndeclaredTags(): array
+    {
+        return array_values(array_diff(
+            $this->findUsedTags(),
+            array_map(
+                fn (Tag $tag): string => $tag->name,
+                (array)$this->tags
+            ),
+        ));
     }
 }

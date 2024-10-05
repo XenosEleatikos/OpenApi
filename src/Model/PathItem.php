@@ -6,9 +6,12 @@ namespace Xenos\OpenApi\Model;
 
 use JsonSerializable;
 use stdClass;
-use Xenos\OpenApi\Model\Reference;
 
 use function array_filter;
+use function array_merge;
+use function array_reduce;
+use function array_unique;
+use function array_values;
 
 class PathItem implements JsonSerializable
 {
@@ -83,5 +86,15 @@ class PathItem implements JsonSerializable
                 $this->patch,
                 $this->trace,
         ]);
+    }
+
+    /** @return string[] */
+    public function findAllTags(): array
+    {
+        return array_values(array_unique(array_reduce(
+            $this->getAllOperations(),
+            fn (array $carry, Operation $operation) => array_merge($carry, $operation->tags),
+            []
+        )));
     }
 }
