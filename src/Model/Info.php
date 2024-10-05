@@ -39,4 +39,10 @@ class Info implements JsonSerializable
     {
         return (object)array_filter((array)$this);
     }
+
+    public function hasContactInformation(): bool
+    {
+        return $this->contact !== null
+            && !$this->contact->isEmpty();
+    }
 }

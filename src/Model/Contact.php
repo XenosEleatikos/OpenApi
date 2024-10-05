@@ -31,4 +31,9 @@ class Contact implements JsonSerializable
     {
         return (object)array_filter((array)$this);
     }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->name) && empty($this->url) && empty($this->email);
+    }
 }
