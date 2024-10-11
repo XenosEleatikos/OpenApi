@@ -91,11 +91,11 @@ class OpenAPI implements JsonSerializable
     /** @return string[] */
     public function findUsedTags(): array
     {
-        return array_values(array_unique(array_reduce(
+        return $this->tags->sortTags(array_values(array_unique(array_reduce(
             (array)$this->paths,
-            fn (array $carry, PathItem $pathItem) => array_merge($carry, $pathItem->findAllTags()),
+            fn(array $carry, PathItem $pathItem) => array_merge($carry, $pathItem->findAllTags()),
             []
-        )));
+        ))));
     }
 
     /** @return string[] */
