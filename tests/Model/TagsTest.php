@@ -13,6 +13,28 @@ use function array_values;
 
 class TagsTest extends TestCase
 {
+    public function testArrayAccessByName(): void
+    {
+        $tag1 = new Tag('tag1');
+        $tag2 = new Tag('tag2');
+
+        $tags = new Tags([$tag1, $tag2]);
+
+        self::assertSame($tag1, $tags['tag1']);
+        self::assertSame($tag2, $tags['tag2']);
+    }
+
+    public function testOffsetGetByName(): void
+    {
+        $tag1 = new Tag('tag1');
+        $tag2 = new Tag('tag2');
+
+        $tags = new Tags([$tag1, $tag2]);
+
+        self::assertSame($tag1, $tags->offsetGet('tag1'));
+        self::assertSame($tag2, $tags->offsetGet('tag2'));
+    }
+
     #[DataProvider('provideDataForTestGetTagNames')]
     public function testGetTagNames(
         array $expectedTagNames,

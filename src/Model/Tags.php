@@ -10,12 +10,24 @@ use stdClass;
 
 use function array_flip;
 use function array_key_exists;
+use function array_keys;
 use function array_map;
+use function array_values;
 use function usort;
 
-/** @extends ArrayObject<int, Tag> */
+/** @extends ArrayObject<string, Tag> */
 class Tags extends ArrayObject implements JsonSerializable
 {
+    /** @param Tag[] $tags */
+    public function __construct(array $tags = [])
+    {
+        foreach ($tags as $tag) {
+            $array[$tag->name] = $tag;
+        }
+
+        parent::__construct($array ?? []);
+    }
+
     /** @param stdClass[] $tags */
     public static function make(array $tags): self
     {
@@ -30,17 +42,14 @@ class Tags extends ArrayObject implements JsonSerializable
     {
         return array_map(
             fn (Tag $tag) => $tag->jsonSerialize(),
-            $this->getArrayCopy()
+            array_values($this->getArrayCopy())
         );
     }
 
     /** @return string[] */
     public function getTagNames(): array
     {
-        return array_map(
-            fn (Tag $tag) => $tag->name,
-            $this->getArrayCopy()
-        );
+        return array_keys($this->getArrayCopy());
     }
 
     public function sortTags(array $tagNames): array
