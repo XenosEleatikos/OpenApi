@@ -65,8 +65,8 @@ class Operation implements JsonSerializable
         ]);
     }
 
-    public function hasTag(string $tagName): bool
+    public function hasTag(string $tag): bool
     {
-        return in_array($tagName, $this->tags);
+        return in_array($tag, $this->tags);
     }
 }
