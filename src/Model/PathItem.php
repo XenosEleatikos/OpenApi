@@ -47,7 +47,7 @@ class PathItem implements JsonSerializable
         );
     }
 
-    public static function makePathItemOrReference(stdClass $pathItemOrReference): self|\Xenos\OpenApi\Model\Reference
+    public static function makePathItemOrReference(stdClass $pathItemOrReference): self|Reference
     {
         if (isset($pathItemOrReference->{'$ref'})) {
             return Reference::make($pathItemOrReference);
@@ -73,19 +73,19 @@ class PathItem implements JsonSerializable
         ]);
     }
 
-    /** @return Operation[] */
+    /** @return array<value-of<Method>, Operation> */
     public function getAllOperations(): array
     {
-        return array_filter([
-                $this->get,
-                $this->put,
-                $this->post,
-                $this->delete,
-                $this->options,
-                $this->head,
-                $this->patch,
-                $this->trace,
-        ]);
+        foreach (Method::cases() as $case) {
+            $methods[$case->value] = $this->getOperation($case);
+        }
+
+        return array_filter($methods);
+    }
+
+    public function getOperation(Method $method): ?Operation
+    {
+        return $this->{$method->lowerCase()};
     }
 
     /** @return string[] */

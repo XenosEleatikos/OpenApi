@@ -52,6 +52,10 @@ class Tags extends ArrayObject implements JsonSerializable
         return array_keys($this->getArrayCopy());
     }
 
+    /**
+     * @param string[] $tagNames
+     * @return string[]
+     */
     public function sortTags(array $tagNames): array
     {
         $order = array_flip($this->getTagNames());

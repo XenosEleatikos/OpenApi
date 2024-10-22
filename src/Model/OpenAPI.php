@@ -79,7 +79,7 @@ class OpenAPI implements JsonSerializable
     // @todo Implement links, callbacks and path items
     // @todo Implement external urls
     /** @param string[] $path */
-    private static function get(object $object, array $path): \Xenos\OpenApi\Model\Schema|Response|Parameter|Example|RequestBody|Header|SecurityScheme|Link
+    private static function get(object $object, array $path): Schema|Response|Parameter|Example|RequestBody|Header|SecurityScheme|Link
     {
         $property = array_shift($path);
 
@@ -93,7 +93,7 @@ class OpenAPI implements JsonSerializable
     {
         return $this->tags->sortTags(array_values(array_unique(array_reduce(
             (array)$this->paths,
-            fn(array $carry, PathItem $pathItem) => array_merge($carry, $pathItem->findAllTags()),
+            fn (array $carry, PathItem $pathItem) => array_merge($carry, $pathItem->findAllTags()),
             []
         ))));
     }
