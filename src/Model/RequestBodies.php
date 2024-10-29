@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Xenos\OpenApi\Model;
 
-use ArrayObject;
 use JsonSerializable;
 use stdClass;
 
 use function array_filter;
 use function array_map;
 
-/** @extends ArrayObject<string, RequestBody> */
-class RequestBodies extends ArrayObject implements JsonSerializable
+/**
+ * @extends AbstractComponentsSubList<RequestBody>
+ */
+class RequestBodies extends AbstractComponentsSubList implements JsonSerializable
 {
     public static function make(stdClass $requestBodies): self
     {

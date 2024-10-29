@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Xenos\OpenApi\Model;
 
-use ArrayObject;
 use JsonSerializable;
 use stdClass;
 
 use function array_filter;
 use function array_map;
 
-/** @extends ArrayObject<string, Parameter> */
-class Parameters extends ArrayObject implements JsonSerializable
+/**
+ * @extends AbstractComponentsSubList<Parameter>
+ */
+class Parameters extends AbstractComponentsSubList implements JsonSerializable
 {
     public static function make(stdClass $parameters): self
     {

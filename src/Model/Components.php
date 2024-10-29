@@ -6,7 +6,6 @@ namespace Xenos\OpenApi\Model;
 
 use JsonSerializable;
 use stdClass;
-use Xenos\OpenApi\Model\Schemas;
 
 use function array_filter;
 

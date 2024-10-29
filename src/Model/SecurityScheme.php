@@ -6,7 +6,6 @@ namespace Xenos\OpenApi\Model;
 
 use JsonSerializable;
 use stdClass;
-use Xenos\OpenApi\Model\Reference;
 use Xenos\OpenApi\Model\SecurityScheme\SecuritySchemeApiKey;
 use Xenos\OpenApi\Model\SecurityScheme\SecuritySchemeHttp;
 use Xenos\OpenApi\Model\SecurityScheme\SecuritySchemeOAuth2;
@@ -16,7 +15,7 @@ use function array_filter;
 
 class SecurityScheme implements JsonSerializable
 {
-    protected function __construct(
+    public function __construct(
         public SecuritySchemeType $type,
         public ?string $description =  null,
     ) {
@@ -33,7 +32,7 @@ class SecurityScheme implements JsonSerializable
         };
     }
 
-    public static function makeSecuritySchemeOrReference(stdClass $securitySchemeOrReference): self|\Xenos\OpenApi\Model\Reference
+    public static function makeSecuritySchemeOrReference(stdClass $securitySchemeOrReference): self|Reference
     {
         if (isset($securitySchemeOrReference->{'$ref'})) {
             return Reference::make($securitySchemeOrReference);
