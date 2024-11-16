@@ -30,7 +30,6 @@ class Schema implements JsonSerializable
         public mixed $default = null,
         public ?self $additionalProperties = null,
     ) {
-        $this->properties = new SchemasOrReferences();
     }
 
     public function isEnum(): bool

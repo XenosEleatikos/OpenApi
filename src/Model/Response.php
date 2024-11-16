@@ -12,9 +12,9 @@ use function array_filter;
 class Response implements JsonSerializable
 {
     public function __construct(
-        public string             $description,
+        public string $description,
         public ?HeadersOrReferences $headers = null,
-        public ?MediaTypes          $content = null,
+        public ?MediaTypes $content = null,
         public ?LinksOrReferences $links = null,
     ) {
     }

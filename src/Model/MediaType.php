@@ -15,7 +15,7 @@ class MediaType implements JsonSerializable
 {
     public function __construct(
         public null|Schema|Reference $schema = null,
-        public mixed                 $example = null,
+        public mixed $example = null,
         public ?ExamplesOrReferences $examples = null,
     ) {
     }

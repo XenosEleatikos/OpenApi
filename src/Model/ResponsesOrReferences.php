@@ -7,12 +7,11 @@ namespace Xenos\OpenApi\Model;
 use ArrayObject;
 use JsonSerializable;
 use stdClass;
-use Xenos\OpenApi\Model\Reference;
 
 use function array_filter;
 use function array_map;
 
-/** @extends ArrayObject<string, Response|\Xenos\OpenApi\Model\Reference> */
+/** @extends ArrayObject<string, Response|Reference> */
 class ResponsesOrReferences extends ArrayObject implements JsonSerializable
 {
     public static function make(stdClass $responses): self
