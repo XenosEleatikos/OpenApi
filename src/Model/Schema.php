@@ -8,6 +8,7 @@ use JsonSerializable;
 use stdClass;
 
 use function array_filter;
+use function is_bool;
 use function is_integer;
 use function is_scalar;
 use function is_string;
@@ -28,7 +29,7 @@ class Schema implements JsonSerializable
         /** @var array<int, mixed> */
         public array $enum = [],
         public mixed $default = null,
-        public ?self $additionalProperties = null,
+        public bool|Schema|Reference $additionalProperties = true,
     ) {
     }
 
@@ -95,7 +96,9 @@ class Schema implements JsonSerializable
             description: $schema->description ?? null,
             enum: $schema->enum ?? [],
             default: $schema->default ?? null,
-            additionalProperties: isset($schema->additionalProperties) ? Schema::make($schema->additionalProperties) : null,
+            additionalProperties: ($schema->additionalProperties ?? true) === true
+                ? true
+                : ($schema->additionalProperties === false ? false : self::makeSchemaOrReference($schema->additionalProperties)),
         );
 
         if (isset($schema->properties)) {
@@ -116,18 +119,23 @@ class Schema implements JsonSerializable
 
     public function jsonSerialize(): stdClass
     {
-        return (object)array_filter([
-            'type' => count($this->type) === 0 ? null : $this->type->jsonSerialize(),
-            'format' => $this->format,
-            'properties' => $this->properties->count() === 0 ? null : $this->properties->jsonSerialize(),
-            'required' => empty($this->required) ? null : $this->required,
-            'examples' => empty($this->examples) ? null : $this->examples,
-            'xml' => isset($this->xml) ? $this->xml->jsonSerialize() : null,
-            'items' => isset($this->items) ? $this->items->jsonSerialize() : null,
-            'description' => $this->description,
-            'enum' => empty($this->enum) ? null : $this->enum,
-            'default' => $this->default,
-            'additionalProperties' => $this->additionalProperties?->jsonSerialize(),
-        ]);
+        return (object)array_filter(
+            array: [
+                'type' => count($this->type) === 0 ? null : $this->type->jsonSerialize(),
+                'format' => $this->format,
+                'properties' => $this->properties->count() === 0 ? null : $this->properties->jsonSerialize(),
+                'required' => empty($this->required) ? null : $this->required,
+                'examples' => empty($this->examples) ? null : $this->examples,
+                'xml' => isset($this->xml) ? $this->xml->jsonSerialize() : null,
+                'items' => isset($this->items) ? $this->items->jsonSerialize() : null,
+                'description' => $this->description,
+                'enum' => empty($this->enum) ? null : $this->enum,
+                'default' => $this->default,
+                'additionalProperties' => $this->additionalProperties === true
+                    ? null
+                    : ($this->additionalProperties === false ? false : $this->additionalProperties->jsonSerialize()),
+            ],
+            callback: fn (mixed $value): bool => $value !== null,
+        );
     }
 }
